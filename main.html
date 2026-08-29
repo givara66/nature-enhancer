@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>معزّز صور الطبيعة</title>
+    
+    <!-- ربط ملف التصميم -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="container">
+        <h1><span>🌿</span> معزّز صور الطبيعة</h1>
+        <p class="subtitle">ارفع صورتك واحصل على تحسين احترافي بأسلوبي الخاص</p>
+
+        <!-- منطقة رفع الصورة -->
+        <div class="upload-area" id="dropZone">
+            <span class="icon">📸</span>
+            <p><strong>اضغط هنا</strong> أو اسحب صورتك</p>
+            <p style="font-size:0.9rem; color:#8a8a8a; margin-top:0.3rem;">يدعم JPG, PNG, WebP</p>
+            <input type="file" id="fileInput" accept="image/*" style="display:none" />
+        </div>
+
+        <!-- أزرار التحكم -->
+        <div class="controls">
+            <label for="strengthSlider">💪 قوة التحسين: <span id="strengthValue">2</span></label>
+            <input type="range" id="strengthSlider" min="0.5" max="4" step="0.5" value="2" />
+            <button class="btn" id="enhanceBtn" disabled>🎨 حسّن الصورة</button>
+            <button class="btn btn-outline" id="downloadBtn" disabled>📥 تحميل</button>
+        </div>
+
+        <!-- عرض الصور -->
+        <div class="preview-container">
+            <div class="preview-box">
+                <div class="label">📷 الصورة الأصلية</div>
+                <img id="originalPreview" src="" alt="الصورة الأصلية" />
+            </div>
+            <div class="preview-box">
+                <div class="label">✨ بعد التحسين</div>
+                <img id="enhancedPreview" src="" alt="الصورة المحسّنة" />
+            </div>
+        </div>
+
+        <!-- معلومات إضافية -->
+        <div class="note">
+            <strong>🔒 خصوصية تامة</strong> — جميع الصور تُعالج في متصفحك، ولا تُرفع لأي خادم.
+            <br />
+            <a href="#" class="instagram-link" id="instaLink">📸 تابعني على انستغرام</a>
+        </div>
+    </div>
+
+    <!-- تحميل مكتبة التحسين -->
+    <script type="importmap">
+    {
+        "imports": {
+            "@shahid-labs/pace": "https://cdn.jsdelivr.net/npm/@shahid-labs/pace/dist/pace.esm.js"
+        }
+    }
+    </script>
+
+    <!-- ربط ملف الجافاسكريبت -->
+    <script type="module" src="script.js"></script>
+</body>
+</html>
