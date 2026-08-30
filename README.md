@@ -15,4 +15,5 @@
 4. حمّل النتيجة
 
 ## 🔗 تابعني
-[Instagram](https://instagram.com/اسم_حسابك)
+[Instagram](https://instagram.com/https://www.instagram.com/shi_nichi999?igsi=NGxrd2Y5cHV1ZXpq
+)
