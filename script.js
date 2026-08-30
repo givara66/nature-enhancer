@@ -127,6 +127,6 @@ downloadBtn.addEventListener('click', () => {
 });
 
 // رابط الانستغرام (عدله لحسابك)
-document.getElementById('instaLink').href = 'https://instagram.com/اسم_حسابك';
+document.getElementById('instaLink').href = 'https://instagram.com/document.getElementById('instaLink').href = 'https://instagram.com/shi_nichi999';';
 
 console.log('🌿 معزّز صور الطبيعة جاهز!');
