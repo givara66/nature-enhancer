@@ -1,7 +1,4 @@
-// استيراد مكتبة التحسين
-import { applyPACE } from '@shahid-labs/pace';
-
-// جلب عناصر الصفحة
+// ===== جلب العناصر (كما هي) =====
 const fileInput = document.getElementById('fileInput');
 const dropZone = document.getElementById('dropZone');
 const originalImg = document.getElementById('originalPreview');
@@ -11,54 +8,33 @@ const downloadBtn = document.getElementById('downloadBtn');
 const strengthSlider = document.getElementById('strengthSlider');
 const strengthValue = document.getElementById('strengthValue');
 
-// متغيرات لتخزين الصور
-let currentImageData = null;
-let enhancedImageData = null;
+let currentImageFile = null;
+let enhancedImageURL = null;
 
-// تحديث قيمة شريط التحكم
+// ===== شريط التحكم =====
 strengthSlider.addEventListener('input', () => {
     strengthValue.textContent = strengthSlider.value;
 });
 
-// دالة تحميل الصورة
+// ===== رفع الصورة (نفس الكود السابق) =====
 function loadImage(file) {
     const reader = new FileReader();
     reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0);
-
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            currentImageData = new ImageData(
-                new Uint8ClampedArray(imageData.data),
-                imageData.width,
-                imageData.height
-            );
-
-            originalImg.src = canvas.toDataURL('image/jpeg', 0.92);
-            enhancedImg.src = '';
-            enhancedImageData = null;
-            downloadBtn.disabled = true;
-            enhanceBtn.disabled = false;
-        };
-        img.src = e.target.result;
+        currentImageFile = e.target.result;
+        originalImg.src = currentImageFile;
+        enhancedImg.src = '';
+        enhanceBtn.disabled = false;
+        downloadBtn.disabled = true;
+        enhancedImageURL = null;
     };
     reader.readAsDataURL(file);
 }
 
-// رفع بالضغط
 dropZone.addEventListener('click', () => fileInput.click());
 fileInput.addEventListener('change', (e) => {
-    if (e.target.files && e.target.files[0]) {
-        loadImage(e.target.files[0]);
-    }
+    if (e.target.files && e.target.files[0]) loadImage(e.target.files[0]);
 });
 
-// رفع بالسحب والإفلات
 dropZone.addEventListener('dragover', (e) => {
     e.preventDefault();
     dropZone.style.borderColor = '#2d4a2d';
@@ -77,56 +53,67 @@ dropZone.addEventListener('drop', (e) => {
     }
 });
 
-// زر تحسين الصورة
+// ===== زر التحسين بالذكاء الاصطناعي =====
 enhanceBtn.addEventListener('click', async () => {
-    if (!currentImageData) return;
+    if (!currentImageFile) return;
 
     enhanceBtn.disabled = true;
-    enhanceBtn.textContent = '⏳ جاري التحسين...';
+    enhanceBtn.textContent = '⏳ جاري تحميل نموذج الذكاء الاصطناعي...';
 
     try {
         const strength = parseFloat(strengthSlider.value);
-        const result = await applyPACE(currentImageData, {
-            strength: strength,
-            debug: false
+        
+        // اختيار النموذج المناسب حسب القوة
+        let modelName;
+        if (strength <= 1.5) {
+            modelName = 'slim';  // خفيف وسريع
+        } else if (strength <= 2.5) {
+            modelName = 'default'; // متوسط
+        } else {
+            modelName = 'thick'; // أعلى جودة
+        }
+
+        enhanceBtn.textContent = `⏳ جاري التحسين بالنموذج ${modelName}...`;
+
+        // إنشاء عنصر صورة للتحسين
+        const img = new Image();
+        img.src = currentImageFile;
+        await img.decode();
+
+        // استخدام UpscalerJS مع النموذج المختار
+        const upscaler = new Upscaler();
+        const result = await upscaler.upscale(img, {
+            model: modelName,
+            patchSize: 64,
+            padding: 4
         });
 
-        enhancedImageData = result;
-
-        const canvas = document.createElement('canvas');
-        canvas.width = result.width;
-        canvas.height = result.height;
-        const ctx = canvas.getContext('2d');
-        ctx.putImageData(result, 0, 0);
-        enhancedImg.src = canvas.toDataURL('image/jpeg', 0.92);
-
+        // عرض النتيجة
+        enhancedImageURL = result;
+        enhancedImg.src = enhancedImageURL;
         downloadBtn.disabled = false;
+
+        enhanceBtn.textContent = '🎨 حسّن الصورة';
+        enhanceBtn.disabled = false;
+
     } catch (error) {
         console.error('خطأ:', error);
-        alert('❌ حدث خطأ أثناء تحسين الصورة. حاول مرة أخرى.');
-    } finally {
-        enhanceBtn.disabled = false;
+        alert('❌ حدث خطأ أثناء تحسين الصورة. حاول بقوة أقل.');
         enhanceBtn.textContent = '🎨 حسّن الصورة';
+        enhanceBtn.disabled = false;
     }
 });
 
-// زر تحميل الصورة المحسّنة
+// ===== زر التحميل =====
 downloadBtn.addEventListener('click', () => {
-    if (!enhancedImageData) return;
-
-    const canvas = document.createElement('canvas');
-    canvas.width = enhancedImageData.width;
-    canvas.height = enhancedImageData.height;
-    const ctx = canvas.getContext('2d');
-    ctx.putImageData(enhancedImageData, 0, 0);
-
+    if (!enhancedImageURL) return;
     const link = document.createElement('a');
-    link.download = 'nature-enhanced.jpg';
-    link.href = canvas.toDataURL('image/jpeg', 0.95);
+    link.download = 'nature-ai-enhanced.jpg';
+    link.href = enhancedImageURL;
     link.click();
 });
 
-// رابط الانستغرام (عدله لحسابك)
-document.getElementById('instaLink').href = 'https://instagram.com/document.getElementById('instaLink').href = 'https://instagram.com/shi_nichi999';';
+// ===== رابط الانستغرام =====
+document.getElementById('instaLink').href = 'https://www.instagram.com/shi_nichi999';
 
-console.log('🌿 معزّز صور الطبيعة جاهز!');
+console.log('🌿 معزّز صور الطبيعة بالذكاء الاصطناعي جاهز!');
