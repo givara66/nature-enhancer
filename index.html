@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>معزّز صور الطبيعة</title>
+    <title>معزّز صور الطبيعة بالذكاء الاصطناعي</title>
     
     <!-- ربط ملف التصميم -->
     <link rel="stylesheet" href="style.css" />
@@ -11,7 +11,7 @@
 <body>
     <div class="container">
         <h1><span>🌿</span> معزّز صور الطبيعة</h1>
-        <p class="subtitle">ارفع صورتك واحصل على تحسين احترافي بأسلوبي الخاص</p>
+        <p class="subtitle">ارفع صورتك واحصل على تحسين احترافي بالذكاء الاصطناعي</p>
 
         <!-- منطقة رفع الصورة -->
         <div class="upload-area" id="dropZone">
@@ -29,6 +29,12 @@
             <button class="btn btn-outline" id="downloadBtn" disabled>📥 تحميل</button>
         </div>
 
+        <!-- مؤشر التقدم -->
+        <div id="progressContainer" style="display: none; margin: 1rem 0;">
+            <progress id="progressBar" value="0" max="100" style="width: 80%; height: 20px;"></progress>
+            <p id="progressText" style="margin-top: 5px; color: #2d4a2d;">0%</p>
+        </div>
+
         <!-- عرض الصور -->
         <div class="preview-container">
             <div class="preview-box">
@@ -36,7 +42,7 @@
                 <img id="originalPreview" src="" alt="الصورة الأصلية" />
             </div>
             <div class="preview-box">
-                <div class="label">✨ بعد التحسين</div>
+                <div class="label">✨ بعد التحسين بالذكاء الاصطناعي</div>
                 <img id="enhancedPreview" src="" alt="الصورة المحسّنة" />
             </div>
         </div>
@@ -49,14 +55,9 @@
         </div>
     </div>
 
-    <!-- تحميل مكتبة التحسين -->
-    <script type="importmap">
-    {
-        "imports": {
-            "@shahid-labs/pace": "https://cdn.jsdelivr.net/npm/@shahid-labs/pace/dist/pace.esm.js"
-        }
-    }
-    </script>
+    <!-- تحميل مكتبات الذكاء الاصطناعي -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/upscaler"></script>
 
     <!-- ربط ملف الجافاسكريبت -->
     <script type="module" src="script.js"></script>
